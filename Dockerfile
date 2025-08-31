@@ -24,7 +24,7 @@ COPY gestionrhfront/package.json gestionrhfront/package-lock.json ./
 RUN npm install --omit=dev
 
 # Copier le serveur Express (à la racine du projet)
-COPY server.js . 
+COPY gestionrhfront/server.js . 
 
 # Copier l'application compilée depuis l'étape de build
 COPY --from=build /app/dist/gestionrhfront/ ./dist/gestionrhfront/
