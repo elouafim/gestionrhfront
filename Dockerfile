@@ -1,4 +1,4 @@
-# Étape 1: Compilation de l'application Angular
+# Étape 1 : Compilation de l'application Angular
 FROM node:18 AS build
 
 # Définir le répertoire de travail
@@ -12,25 +12,22 @@ RUN npm install
 COPY gestionrhfront/ ./
 
 # Compiler l'application pour la production
-RUN npm run build
+RUN npm run build -- --configuration production
 
-# Étape 2: Création de l'image de production légère
-FROM node:18-slim
+# Étape 2 : Nginx pour servir l'application Angular
+FROM nginx:alpine
 
-WORKDIR /app
+# Supprimer la configuration par défaut de Nginx
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Copier uniquement les dépendances de production depuis le sous-dossier
-COPY gestionrhfront/package.json gestionrhfront/package-lock.json ./
-RUN npm install --omit=dev
+# Copier la configuration personnalisée de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copier le serveur Express (à la racine du projet)
-COPY gestionrhfront/server.js . 
+# Copier le build Angular compilé depuis l'étape de build
+COPY --from=build /app/dist/gestionrhfront/ /usr/share/nginx/html
 
-# Copier l'application compilée depuis l'étape de build
-COPY --from=build /app/dist/gestionrhfront/ ./dist/gestionrhfront/
+# Exposer le port
+EXPOSE 80
 
-# Exposer le port sur lequel le serveur tourne
-EXPOSE 8080
-
-# La commande pour démarrer le serveur
-CMD ["node", "server.js"]
+# Lancer Nginx
+CMD ["nginx", "-g", "daemon off;"]
