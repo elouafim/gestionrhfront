@@ -17,6 +17,7 @@ COPY gestionrhfront/ ./
 # 🔍 Debug : vérifier que tous les fichiers source sont présents
 RUN echo "=== Contenu de /app ===" && ls -R /app
 RUN echo "=== Contenu de /app/src ===" && ls -R /app/src
+RUN echo "=== /app après COPY ===" && ls -R /app
 
 # Build Angular en production
 RUN npx ng build --configuration=production
