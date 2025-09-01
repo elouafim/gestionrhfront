@@ -18,10 +18,10 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copier ta config personnalisée
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copier les fichiers buildés Angular
-COPY --from=build /app/dist/gestionrhfront/browser /usr/share/nginx/html
+# Copier les fichiers buildés Angular (bon chemin !)
+COPY --from=build /app/dist/gestionrhfront /usr/share/nginx/html
 
-# 🔍 Debug : vérifier le contenu final
+# Debug pour vérifier
 RUN ls -R /usr/share/nginx/html
 
 EXPOSE 80
