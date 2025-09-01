@@ -9,6 +9,9 @@ COPY gestionrhfront/ ./
 # Build Angular (production)
 RUN npx ng build --configuration=production
 
+# 🔍 Debug : voir où Angular a mis le build
+RUN ls -R /app/dist
+
 # Étape 2 : Nginx
 FROM nginx:alpine
 
@@ -18,10 +21,11 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copier ta config personnalisée
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copier les fichiers buildés Angular (bon chemin !)
-COPY --from=build /app/dist/gestionrhfront /usr/share/nginx/html
+# Copier les fichiers buildés Angular
+# ⚠️ Mets ici le bon chemin (selon la sortie du ls ci-dessus)
+COPY --from=build /app/dist/gestionrhfront/browser /usr/share/nginx/html
 
-# Debug pour vérifier
+# 🔍 Debug final : vérifier ce que Nginx sert
 RUN ls -R /usr/share/nginx/html
 
 EXPOSE 80
