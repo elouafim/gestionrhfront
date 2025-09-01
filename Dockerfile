@@ -21,9 +21,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copier ta config personnalisée
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copier les fichiers buildés Angular
-# ⚠️ Mets ici le bon chemin (selon la sortie du ls ci-dessus)
-COPY --from=build /app/dist/gestionrhfront/browser /usr/share/nginx/html
+# Copier les fichiers buildés Angular (chemin correct !)
+COPY --from=build /app/dist/gestionrhfront /usr/share/nginx/html
 
 # 🔍 Debug final : vérifier ce que Nginx sert
 RUN ls -R /usr/share/nginx/html
